@@ -2148,6 +2148,7 @@ namespace basisu
 	// Image saving/loading/resampling
 
 	bool load_png(const char* pFilename, image& img);
+	bool load_image(const char* pFilename, image& img);
 	inline bool load_png(const std::string &filename, image &img) { return load_png(filename.c_str(), img); }
 
 	enum

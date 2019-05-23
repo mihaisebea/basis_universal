@@ -19,6 +19,9 @@
 #include "basisu_etc.h"
 #include "transcoder/basisu_transcoder.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #if defined(_WIN32)
 // For QueryPerformanceCounter/QueryPerformanceFrequency
 #define WIN32_LEAN_AND_MEAN
@@ -170,6 +173,82 @@ namespace basisu
 		return ticks * g_timer_freq;
 	}
 		
+	bool load_image(const char* pFilename, image& img)
+	{
+		std::vector<uint8_t> buffer;
+	
+		unsigned err = lodepng::load_file(buffer, std::string(pFilename));
+		if (err)
+			return false;
+
+		unsigned w = 0, h = 0;
+
+		if (sizeof(void*) == sizeof(uint32_t))
+		{
+			// Inspect the image first on 32-bit builds, to see if the image would require too much memory.
+			int components = 0, width, height;
+			int err = stbi_info_from_memory(buffer.data(), (int)buffer.size(), &width, &height, &components);
+			
+			//lodepng::State state;
+			//err = lodepng_inspect(&w, &h, &state, &buffer[0], buffer.size());
+			if ((err == 0) || (!w) || (!h))
+				return false;
+
+			const uint32_t exepected_alloc_size = w * h * sizeof(uint32_t);
+
+			// If the file is too large on 32-bit builds then just bail now, to prevent causing a memory exception.
+			const uint32_t MAX_ALLOC_SIZE = 250000000;
+			if (exepected_alloc_size >= MAX_ALLOC_SIZE)
+			{
+				error_printf("Image \"%s\" is too large (%ux%u) to process in a 32-bit build!\n", pFilename, w, h);
+				return false;
+			}
+
+			w = h = 0;
+		}
+
+		int components = 0, width, height;
+		
+		//if hdr format we need to stbiloadf
+		if (stbi_is_hdr_from_memory(buffer.data(), (int)buffer.size()) != 0)
+		{
+			auto dataPtr = stbi_loadf_from_memory(buffer.data(), (int)buffer.size(), &width, &height, &components, 0);
+
+			if ((dataPtr == 0) || (!width) || (!height))
+				return false;
+		}
+		else
+		{
+			auto dataPtr = stbi_load_from_memory(buffer.data(), (int)buffer.size(), &width, &height, &components, 0);
+
+			if ((dataPtr == 0) || (!width) || (!height))
+				return false;
+
+			uint32_t dataSize = w * h * components;
+
+			img.resize(w, h);
+
+			if (components == 4)
+			{
+				memcpy(img.get_ptr(), dataPtr, dataSize);
+			}
+			else if (components == 3)
+			{
+				// do some processing
+			}
+			else
+			{
+				//print only 3 and 4 components supported ?
+				stbi_image_free(dataPtr);
+				return false; //
+			}
+			
+			stbi_image_free(dataPtr);
+		}
+									
+		return true;
+	}
+
 	bool load_png(const char* pFilename, image& img)
 	{
 		std::vector<uint8_t> buffer;

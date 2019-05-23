@@ -245,7 +245,7 @@ namespace basisu
 				pSource_filename = m_params.m_source_filenames[source_file_index].c_str();
 
 				// Load the source image
-				if (!load_png(pSource_filename, file_image))
+				if (!load_image(pSource_filename, file_image))
 				{
 					error_printf("Failed reading source image: %s\n", pSource_filename);
 					return false;

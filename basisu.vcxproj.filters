@@ -47,6 +47,7 @@
       <Filter>transcoder</Filter>
     </ClInclude>
     <ClInclude Include="basisu_ssim.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="transcoder\basisu_transcoder_tables_dxt1_6.inc">

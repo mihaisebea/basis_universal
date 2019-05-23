@@ -1,0 +1,8 @@
+/.vs/basisu/v15
+/.vs/basisu/v16
+/x64/Debug
+/*.user
+/bin/*.ktx
+/bin/*.png
+/bin/*.basis
+/bin/*.tga

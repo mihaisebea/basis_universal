@@ -166,6 +166,7 @@
     <ClCompile Include="basisu_resample_filters.cpp" />
     <ClInclude Include="basisu_ssim.h" />
     <ClInclude Include="lodepng.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="transcoder\basisu.h" />
     <ClInclude Include="transcoder\basisu_transcoder.h" />
     <ClInclude Include="transcoder\basisu_transcoder_internal.h" />

@@ -1,4 +1,4 @@
-language: shell
+language: cpp
 
 matrix:
   include:
@@ -6,4 +6,4 @@ matrix:
   - name: "MSVC on Windows"
     os: windows
     script:
-    - cmake -build .
+    - cmake --build .

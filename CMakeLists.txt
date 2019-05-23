@@ -26,11 +26,18 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 set(CMAKE_CXX_FLAGS -std=c++11)
-set(GCC_COMPILE_FLAGS "-fvisibility=hidden -fvisibility-inlines-hidden -fPIC -fopenmp -fno-strict-aliasing -D_LARGEFILE64_SOURCE=1 -D_FILE_OFFSET_BITS=64 -Wall -Wextra -Wno-unused-local-typedefs -Wno-unused-value -Wno-unused-parameter -Wno-unused-but-set-variable -Wno-unused-variable -Wno-reorder")
 
-if (NOT BUILD_X64)
-	set(GCC_COMPILE_FLAGS "${GCC_COMPILE_FLAGS} -m32")
-endif()
+if (WIN32)
+	set(GCC_COMPILE_FLAGS "")
+else()
+	set(GCC_COMPILE_FLAGS "-fvisibility=hidden -fvisibility-inlines-hidden -fPIC -fopenmp -fno-strict-aliasing -D_LARGEFILE64_SOURCE=1 -D_FILE_OFFSET_BITS=64 -Wall -Wextra -Wno-unused-local-typedefs -Wno-unused-value -Wno-unused-parameter -Wno-unused-but-set-variable -Wno-unused-variable -Wno-reorder")
+
+	if (NOT BUILD_X64)
+		set(GCC_COMPILE_FLAGS "${GCC_COMPILE_FLAGS} -m32")
+	endif()
+
+endif(WIN32)
+
 
 if (STATIC)
 	set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_LINK_FLAGS} -static-libgcc -static-libstdc++ -static")

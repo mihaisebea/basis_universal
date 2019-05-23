@@ -1,0 +1,9 @@
+language: shell
+
+matrix:
+  include:
+
+  - name: "MSVC on Windows"
+    os: windows
+    script:
+    - cmake -build .

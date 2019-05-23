@@ -1,4 +1,4 @@
-language: cpp
+language: sh
 
 matrix:
   include:
